@@ -4,91 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>V&S Royale Transit - Каталог товаров</title>
-  <!-- Google Fonts for a luxurious look -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    /* Основные стили */
-    body {
-      font-family: 'Lato', sans-serif;
-      background: #f7f7f7;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-
-    header {
-      background: #1a1a1a;
-      color: #d4af37;
-      padding: 20px 0;
-      text-align: center;
-      border-bottom: 2px solid #d4af37;
-    }
-
-    header img {
-      height: 200px;
-      vertical-align: middle;
-    }
-
-    header p {
-      margin: 10px 0 0;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 40px auto;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-    }
-
-    .product-card {
-      background: #fff;
-      border: 1px solid #e6d3a3;
-      border-radius: 5px;
-      overflow: hidden;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s ease;
-    }
-
-    .product-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .product-card img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .product-card .details {
-      padding: 20px;
-    }
-
-    .product-card h3 {
-      font-family: 'Playfair Display', serif;
-      margin: 0 0 10px;
-      font-size: 22px;
-      color: #333;
-    }
-
-    .product-card p {
-      font-size: 16px;
-      color: #666;
-      margin: 0 0 10px;
-    }
-
-    .product-card .price {
-      font-size: 18px;
-      color: #d4af37;
-      font-weight: 700;
-    }
+    body { font-family: 'Lato', sans-serif; background: #f7f7f7; margin: 0; padding: 0; color: #333; }
+    /* Updated header background to a luxurious off-white color */
+    header { background: #fffaf0; color: #d4af37; padding: 20px 0; text-align: center; border-bottom: 2px solid #d4af37; }
+    header img { height: 200px; vertical-align: middle; }
+    header p { margin: 10px 0 0; font-size: 18px; font-weight: 700; }
+    .container { width: 90%; max-width: 1200px; margin: 40px auto; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+    .product-card { background: #fff; border: 1px solid #e6d3a3; border-radius: 5px; overflow: hidden; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); transition: transform 0.3s ease; }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-card img { max-width: 100%; height: auto; display: block; }
+    .product-card .details { padding: 20px; }
+    .product-card h3 { font-family: 'Playfair Display', serif; margin: 0 0 10px; font-size: 22px; color: #333; }
+    .product-card .brand { font-size: 16px; font-weight: bold; color: #555; margin-bottom: 10px; }
+    .product-card p { font-size: 16px; color: #666; margin: 0 0 10px; }
+    .product-card .price { font-size: 18px; color: #d4af37; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -98,37 +30,82 @@
   </header>
 
   <div class="container">
-    <div class="product-grid">
-      <!-- Товар 1 -->
-      <div class="product-card">
-        <img src="https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/bltbb89c2483ec37a4b/67af5b623b6fa06322cdb9db/offer-manager-opus-discount-product-image.jpeg?format=webp&width=375" alt="Товар 1">
-        <div class="details">
-          <h3>Товар 1</h3>
-          <p>Краткое описание товара 1.</p>
-          <p class="price">₽19.99</p>
-        </div>
-      </div>
-
-      <!-- Товар 2 -->
-      <div class="product-card">
-        <img src="https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt929ef821c9d0d425/67af5b00991b6e2b0d07fbd2/offer-manager-opus-discount-product-image.jpeg?format=webp&width=375" alt="Товар 2">
-        <div class="details">
-          <h3>Товар 2</h3>
-          <p>Краткое описание товара 2.</p>
-          <p class="price">₽29.99</p>
-        </div>
-      </div>
-
-      <!-- Товар 3 -->
-      <div class="product-card">
-        <img src="https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/bltc190cdaa3ced35a2/67af5a7324e37106520e1b25/offer-manager-opus-discount-product-image.jpeg?format=webp&width=375" alt="Товар 3">
-        <div class="details">
-          <h3>Товар 3</h3>
-          <p>Краткое описание товара 3.</p>
-          <p class="price">₽39.99</p>
-        </div>
-      </div>
+    <div class="product-grid" id="productGrid">
+      <!-- Product cards will be inserted here dynamically -->
     </div>
   </div>
+
+  <script>
+    // Array of product objects including a brand property
+    const products = [
+      {
+        name: "Товар 1",
+        brand: "Бренд 1",
+        description: "Краткое описание товара 1.",
+        price: "₽19.99",
+        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt144bc9bf0d5399f3/67b5f882e177f0d729a19094/offer-manager-zwilling-discount-product-image.jpeg?format=webp"
+      },
+      {
+        name: "Товар 2",
+        brand: "Бренд 2",
+        description: "Краткое описание товара 2.",
+        price: "₽29.99",
+        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt3922af1896db51f8/67b2f09b0f7058fa2ac45bcd/offer-manager-fossil-discount-product-image.jpeg?format=webp"
+      },
+      {
+        name: "Товар 3",
+        brand: "Бренд 3",
+        description: "Краткое описание товара 3.",
+        price: "₽39.99",
+        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/bltc190cdaa3ced35a2/67af5a7324e37106520e1b25/offer-manager-opus-discount-product-image.jpeg?format=webp"
+      },
+      // Additional items with brand information
+      {
+        name: "Товар 4",
+        brand: "Бренд 4",
+        description: "Краткое описание товара 4.",
+        price: "₽49.99",
+        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt7bf0a0b660bf036c/67a9bb500f8a2c2da15ab700/offer-manager-g-k-mayer-shoes-discount-product-image.jpeg?format=webp"
+      },
+      {
+        name: "Товар 5",
+        brand: "Бренд 5",
+        description: "Краткое описание товара 5.",
+        price: "₽59.99",
+        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt399fe12d55dda682/67a1e5c31479e043a4eb32a8/offer-manager-comma-discount-product-image.png?format=webp"
+      },
+      {
+        name: "Товар 6",
+        brand: "Бренд 6",
+        description: "Краткое описание товара 6.",
+        price: "₽69.99",
+        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt12bacc94d7da8631/67af018f631493094a34519c/offer-manager-coccinelle-discount-product-image.jpeg?format=webp"
+      }
+    ];
+
+    // Get reference to the product grid container
+    const productGrid = document.getElementById('productGrid');
+
+    // Generate HTML for each product and append it to the container
+    products.forEach(product => {
+      // Create a new div element for the product card
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      // Set the inner HTML of the card using template literals, including the brand information
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <div class="details">
+          <h3>${product.name}</h3>
+          <p class="brand">${product.brand}</p>
+          <p>${product.description}</p>
+          <p class="price">${product.price}</p>
+        </div>
+      `;
+
+      // Append the card to the grid
+      productGrid.appendChild(card);
+    });
+  </script>
 </body>
 </html>
