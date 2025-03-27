@@ -1,111 +1,270 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>V&S Royale Transit - Каталог товаров</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Lato', sans-serif; background: #f7f7f7; margin: 0; padding: 0; color: #333; }
-    /* Updated header background to a luxurious off-white color */
     header { background: #fffaf0; color: #d4af37; padding: 20px 0; text-align: center; border-bottom: 2px solid #d4af37; }
     header img { height: 200px; vertical-align: middle; }
     header p { margin: 10px 0 0; font-size: 18px; font-weight: 700; }
     .container { width: 90%; max-width: 1200px; margin: 40px auto; }
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-    .product-card { background: #fff; border: 1px solid #e6d3a3; border-radius: 5px; overflow: hidden; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); transition: transform 0.3s ease; }
-    .product-card:hover { transform: translateY(-5px); }
-    .product-card img { max-width: 100%; height: auto; display: block; }
-    .product-card .details { padding: 20px; }
-    .product-card h3 { font-family: 'Playfair Display', serif; margin: 0 0 10px; font-size: 22px; color: #333; }
-    .product-card .brand { font-size: 16px; font-weight: bold; color: #555; margin-bottom: 10px; }
-    .product-card p { font-size: 16px; color: #666; margin: 0 0 10px; }
-    .product-card .price { font-size: 18px; color: #d4af37; font-weight: 700; }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .controls label {
+      font-weight: bold;
+    }
+
+    .controls select {
+      padding: 5px 10px;
+      font-size: 16px;
+      margin-left: 8px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .product-card {
+      background: #fff;
+      border: 1px solid #e6d3a3;
+      border-radius: 5px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img.product {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .product-card .details {
+      padding: 20px;
+    }
+
+    .product-card h3 {
+      font-family: 'Playfair Display', serif;
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #333;
+    }
+
+    .product-card p {
+      font-size: 16px;
+      color: #666;
+      margin: 0 0 10px;
+    }
+
+    .price-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .new-price {
+      color: #d12222;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .discount-badge {
+      background: #d12222;
+      color: white;
+      font-size: 14px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo-cropped.png" alt="V&S Royale Transit Logo">
+    <img src="logo-cropped.png" alt="V&S Royale Transit Logo" />
     <p>Каталог товаров</p>
   </header>
 
   <div class="container">
-    <div class="product-grid" id="productGrid">
-      <!-- Product cards will be inserted here dynamically -->
+    <!-- Filter & Sort Controls -->
+    <div class="controls">
+      <label>
+        Фильтр по бренду:
+        <select id="brandFilter">
+          <option value="">Все бренды</option>
+        </select>
+      </label>
+
+      <label>
+        Сортировка:
+        <select id="sortOption">
+          <option value="default">По умолчанию</option>
+          <option value="priceAsc">Цена: по возрастанию</option>
+          <option value="priceDesc">Цена: по убыванию</option>
+          <option value="nameAsc">Название: A → Z</option>
+          <option value="nameDesc">Название: Z → A</option>
+          <option value="discountDesc">Скидка: по убыванию</option>
+        </select>
+      </label>
     </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid"></div>
   </div>
 
   <script>
-    // Array of product objects including a brand property
-    const products = [
-      {
-        name: "Товар 1",
-        brand: "Бренд 1",
-        description: "Краткое описание товара 1.",
-        price: "₽19.99",
-        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt144bc9bf0d5399f3/67b5f882e177f0d729a19094/offer-manager-zwilling-discount-product-image.jpeg?format=webp"
-      },
-      {
-        name: "Товар 2",
-        brand: "Бренд 2",
-        description: "Краткое описание товара 2.",
-        price: "₽29.99",
-        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt3922af1896db51f8/67b2f09b0f7058fa2ac45bcd/offer-manager-fossil-discount-product-image.jpeg?format=webp"
-      },
-      {
-        name: "Товар 3",
-        brand: "Бренд 3",
-        description: "Краткое описание товара 3.",
-        price: "₽39.99",
-        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/bltc190cdaa3ced35a2/67af5a7324e37106520e1b25/offer-manager-opus-discount-product-image.jpeg?format=webp"
-      },
-      // Additional items with brand information
-      {
-        name: "Товар 4",
-        brand: "Бренд 4",
-        description: "Краткое описание товара 4.",
-        price: "₽49.99",
-        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt7bf0a0b660bf036c/67a9bb500f8a2c2da15ab700/offer-manager-g-k-mayer-shoes-discount-product-image.jpeg?format=webp"
-      },
-      {
-        name: "Товар 5",
-        brand: "Бренд 5",
-        description: "Краткое описание товара 5.",
-        price: "₽59.99",
-        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt399fe12d55dda682/67a1e5c31479e043a4eb32a8/offer-manager-comma-discount-product-image.png?format=webp"
-      },
-      {
-        name: "Товар 6",
-        brand: "Бренд 6",
-        description: "Краткое описание товара 6.",
-        price: "₽69.99",
-        image: "https://eu-images.contentstack.com/v3/assets/bltd5e382ddc8c35d01/blt12bacc94d7da8631/67af018f631493094a34519c/offer-manager-coccinelle-discount-product-image.jpeg?format=webp"
+    let products = [];
+    let filteredProducts = [];
+
+    function parsePrice(str) {
+      if (!str) return NaN;
+
+      // Remove € and spaces
+      let cleaned = str.replace(/[€\s]/g, '');
+
+      // Handle €399,- and similar → treat ,-, -, or trailing comma as 00 cents
+      cleaned = cleaned.replace(/,-$|-$|,$/, ',00');
+
+      // Count separators
+      const commaCount = (cleaned.match(/,/g) || []).length;
+      const dotCount = (cleaned.match(/\./g) || []).length;
+
+      // Handle €1,079,99 → remove first comma
+      if (commaCount === 2 && dotCount === 0) {
+        const parts = cleaned.split(',');
+        cleaned = parts[0] + parts[1] + '.' + parts[2]; // "1" + "079" + "." + "99" → 1079.99
       }
-    ];
+      // Handle €1.099,99 → remove dot, replace comma
+      else if (commaCount === 1 && dotCount >= 1) {
+        cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+      }
+      // Handle €1099,99 → replace comma with dot
+      else if (commaCount === 1 && dotCount === 0) {
+        cleaned = cleaned.replace(',', '.');
+      }
 
-    // Get reference to the product grid container
-    const productGrid = document.getElementById('productGrid');
+      // Remove any remaining non-numeric characters (just in case)
+      cleaned = cleaned.replace(/[^0-9.]/g, '');
 
-    // Generate HTML for each product and append it to the container
-    products.forEach(product => {
-      // Create a new div element for the product card
-      const card = document.createElement('div');
-      card.className = 'product-card';
+      return parseFloat(cleaned);
+    }
 
-      // Set the inner HTML of the card using template literals, including the brand information
-      card.innerHTML = `
-        <img src="${product.image}" alt="${product.name}">
-        <div class="details">
-          <h3>${product.name}</h3>
-          <p class="brand">${product.brand}</p>
-          <p>${product.description}</p>
-          <p class="price">${product.price}</p>
-        </div>
-      `;
 
-      // Append the card to the grid
-      productGrid.appendChild(card);
-    });
+    function renderProducts(productsToRender) {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+
+      productsToRender.forEach(product => {
+        const old = parsePrice(product.old_price);
+        const current = parsePrice(product.new_price);
+        const discount = (!isNaN(old) && !isNaN(current) && old > current)
+          ? Math.round(((old - current) / old) * 100)
+          : null;
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img class="product" src="${product.image}" alt="${product.name}">
+          <div class="details">
+            <h3>${product.name}</h3>
+            <p>${product.brand}</p>
+            <div class="price-wrapper">
+              ${product.old_price ? `<span class="old-price">${product.old_price}</span>` : ''}
+              <span class="new-price">${product.new_price}</span>
+              ${discount ? `<span class="discount-badge">-${discount}%</span>` : ''}
+            </div>
+          </div>
+        `;
+        card.addEventListener('click', () => window.open(product.url, '_blank'));
+        grid.appendChild(card);
+      });
+    }
+
+    function populateBrandFilter(products) {
+      const brands = [...new Set(products.map(p => p.brand).sort())];
+      const filter = document.getElementById('brandFilter');
+      brands.forEach(brand => {
+        const opt = document.createElement('option');
+        opt.value = brand;
+        opt.textContent = brand;
+        filter.appendChild(opt);
+      });
+    }
+
+    function applyFiltersAndSort() {
+      const brand = document.getElementById('brandFilter').value;
+      const sort = document.getElementById('sortOption').value;
+
+      filteredProducts = products.filter(p => {
+        return !brand || p.brand === brand;
+      });
+
+      switch (sort) {
+        case 'priceAsc':
+          filteredProducts.sort((a, b) => parsePrice(a.new_price) - parsePrice(b.new_price));
+          break;
+        case 'priceDesc':
+          filteredProducts.sort((a, b) => parsePrice(b.new_price) - parsePrice(a.new_price));
+          break;
+        case 'nameAsc':
+          filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'nameDesc':
+          filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        case 'discountDesc':
+          filteredProducts.sort((a, b) => {
+            const oldA = parsePrice(a.old_price);
+            const newA = parsePrice(a.new_price);
+            const oldB = parsePrice(b.old_price);
+            const newB = parsePrice(b.new_price);
+
+            const percentA = (!isNaN(oldA) && oldA > 0) ? ((oldA - newA) / oldA) * 100 : 0;
+            const percentB = (!isNaN(oldB) && oldB > 0) ? ((oldB - newB) / oldB) * 100 : 0;
+
+            return percentB - percentA;
+          });
+          break;
+      }
+
+      renderProducts(filteredProducts);
+    }
+
+    fetch('offers.json')
+      .then(res => res.json())
+      .then(data => {
+        products = data;
+        filteredProducts = [...products];
+        populateBrandFilter(products);
+        applyFiltersAndSort();
+      });
+
+    document.getElementById('brandFilter').addEventListener('change', applyFiltersAndSort);
+    document.getElementById('sortOption').addEventListener('change', applyFiltersAndSort);
   </script>
 </body>
 </html>
